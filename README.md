@@ -41,7 +41,7 @@ $`NSEC\_PER\_SEC`$ - 常量$`10^9`$纳秒/秒(nsec/s)
 挑战一：请实现除数不变的无符号整数除法`invdiv`，支持32位周期计数/32位频率、64位周期计数/32位频率或64位周期计数/64位频率。
 - 进阶挑战：进阶挑战：您的`invdiv`实现对于所有可能的输入都是正确的吗？参考论文，请给出`invdiv`优化方法的正确性的形式化证明，确保对于所有任意的除数d和被除数n，其输出等价于整数除法，例如：
 ```math
-\forall n \in [0, 2^{64}) d \int [1, 2^{64}), invdiv(n, d) = \lfloor \frac{n}{d} \rfloor
+\forall n \in [0, 2^{64}) d \in [1, 2^{64}), invdiv(n, d) = \lfloor \frac{n}{d} \rfloor
 ```
 
 挑战二：在挑战一的基础上，请实现`int my_clock_gettime(int clock_id, struct timespec *time)`接口。该接口根据会获取当前时间并写入到`time`结构体中。
