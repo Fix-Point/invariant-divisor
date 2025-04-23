@@ -1,6 +1,6 @@
 **项目名称**：clock_gettime与除数不变的无符号整数除法
 
-**项目链接**：github.com/Fix-Point/invariant-divisor (未公开，项目测试程序、绘图脚本和说明还在编写当中)
+**项目链接**：github.com/Fix-Point/projOPENVELA-InvariantDivisor (项目使用的测试程序、绘图脚本和说明还在编写中，后续会更新到本仓库)
 
 **导师信息**：欧阳湘臻，18792877129，ouyangxiangzhen@xiaomi.com
 
