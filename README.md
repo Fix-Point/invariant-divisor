@@ -47,29 +47,33 @@ $`NSEC\_PER\_SEC`$ - 常量$`10^9`$纳秒/秒(ns/s)
 挑战二：在挑战一的基础上，请实现`int my_clock_gettime(int clock_id, struct timespec *time)`接口。该接口根据会获取当前时间并写入到`time`结构体中。
 - 进阶挑战：您的`my_clock_gettime`实现，其性能和实时性能否超越Linux的C库实现？
 
-提示1： 对于运行时除数不变的无符号整数除法，可以参考编译器优化常量除法的方法，将其转换为乘法和右移操作$`^{[1][2][3][4][5]}`$。
+提示1： 对于运行时除数不变的无符号整数除法，可以参考编译器优化常量除法的方法，将其转换为乘法和右移操作$`^{[1][2][3][4][5]}`$。即对于任意被除数$$n$$和除数$$d$$，可以找到一个乘数$$m$$和右移数$`s`$，使得$`\lfloor \frac {n \times m}{2^{s}} \rfloor = \lfloor \frac{n}{d} \rfloor`$。该式中除以$`2^{s}`$等价于逻辑右移$$s$$位，该操作在绝大多数体系结构中仅消耗1个CPU周期，而乘法通常消耗3个CPU周期，该方式优化过的除法开销最低能达到乘法数量级。
 
 提示2： 本题并非禁用除法，在有硬件除法支持的平台上，如果硬件除法更快，则允许使用除法$`^{[6]}`$。
 
-提示3： 在`clock_gettime`中允许采用近似算法$`^{[7][8]}`$，只要时间转换误差在可接受范围内即可。
+提示3： 在`clock_gettime`中允许采用近似算法$`^{[7][8]}`$，只要时间转换误差在可接受范围内即可。传统的除法优化是精确的，即转换成右移和乘法操作后，$`\lfloor \frac {n \times m}{2^{s}} \rfloor - \lfloor \frac{n}{d} \rfloor < 1`$。Linux的实现通过放宽该约束，允许采用非精确的近似算法，以纳秒级的转换误差为代价换取性能的提升。
 
 **预期目标**：
 
 目标1： 实现除数不变的无符号整数除法算法`invdiv`，确保计算结果与硬件除法一致，且性能和资源使用达到最优。
 - 功能正确性：对给定的测试集，计算结果必须与硬件除法完全一致，无任何误差。
 - 性能指标：在真实硬件上测量对给定的测试集的吞吐率（操作数/秒）。
-- 实时性指标：在真实硬件上测量对给定测试集的操作的尾延迟（90/99/99.9/99.99/99.999百分位延迟）。
+- 实时性指标：以下两种方式任选一种
+  - 测试方式：在真实硬件上测量对给定测试集的操作的尾延迟（90/99/99.9百分位延迟）。
+  - 静态分析方式：通过静态分析工具（如LLVM-TA）得出invdiv的最坏情况执行时间，并对分析结果进行详细的说明。
 - 内存指标：在真实硬件上测量执行过程中的最大RSS(Resident Set Size)。
 - 结合体系结构优化：可利用特定体系结构的硬件指令进行优化，但请尽量不要使用浮点和向量寄存器，因为操作系统内核使用这些寄存器会带来额外的上下文保存和恢复开销。
 
 目标2： 实现`int my_clock_gettime(int clock_id, struct timespec *time)`
 - 时间误差：与操作系统C库clock_gettime实现的时间误差小于1微秒。
 - 性能指标：在真实硬件上测量单线程循环100M次调用的吞吐率(操作数/秒)，以及以最大硬件线程数绑核循环100M次调用的吞吐率
-- 实时性指标：在真实硬件上插桩测量循环100M次调用时的尾延迟（90/99/99.9/99.99/99.999百分位延迟）。
+- 实时性指标：以下两种方式任选一种
+  - 测试方式：插桩测量循环1M次调用时的尾延迟（90/99/99.9百分位延迟）。
+  - 静态分析方式：通过静态分析工具（如LLVM-TA）得出invdiv的最坏情况执行时间，并对分析结果进行详细的说明。
 - 内存指标：在真实硬件上测量执行过程中的最大RSS。
 - 可移植性：实现应具备跨平台可移植性。
 
-注：此处的`90/99/99.9/99.99/99.999百分位延迟`指的是对执行延迟测量若干次，按延迟从小到大排列后，其中最大的`10%/1%/0.1%/0.01%/0.001%`的延迟。举个例子，测量1000次延迟，对其排序后第900个延迟就是`90百分位延迟`，通常也被称为`P90`。如果该值是`120纳秒`，那么意味着`90%`的请求都能在`120纳秒`内完成。
+注：此处的`90/99/99.9百分位延迟`指的是对执行延迟测量若干次，按延迟从小到大排列后，其中最大的`10%/1%/0.1%/0.01%/0.001%`的延迟。举个例子，测量1000次延迟，对其排序后第900个延迟就是`90百分位延迟`，通常也被称为`P90`。如果该值是`120纳秒`，那么意味着`90%`的请求都能在`120纳秒`内完成。
 
 **License**：
 
@@ -94,3 +98,49 @@ Apache协议
 [8] Linux. vdso_calc_ns. https://github.com/torvalds/linux/blob/v6.14/lib/vdso/gettimeofday.c#L39
 
 [9] Leetcode. 两数相除. https://leetcode.cn/problems/divide-two-integers/description/
+
+**编译说明**
+
+本项目包含测试程序和绘图脚本，目录结构如下：
+```bash
+.
+├── 3rdlib                # 第三方库
+│   └── libdivide.h       # libdivide库
+├── config.h              # 测试程序配置
+├── data.c                # 测试数据集
+├── helper_func.h         # 测试帮助函数
+├── LICENSE               # Apache License
+├── Makefile              # 编译和测试脚本
+├── my_clock_gettime.c    # 修改本文件实现my_clock_gettime
+├── my_invdiv.h           # 修改本文件实现invdiv
+├── README.md             # README文件
+├── script                # 绘图脚本
+│   ├── avgdiv.py         # 平均性能条形图绘制
+│   └── latencydiv.py     # 延迟分布图绘制
+├── test_div.c            # invdiv测试程序
+└── test_gettime.c        # clock_gettime测试程序
+```
+
+请修改`my_invdiv.h`和`my_clock_gettime.c`分别实现`invdiv`和`my_clock_gettime`，并通过以下命令进行编译和测试：
+```bash
+# Ubuntu执行以下命令安装依赖
+sudo apt install make gcc python3 python3-pip
+pip3 install matplotlib numpy pandas seaborn
+
+# Fedora执行以下命令安装依赖
+sudo dnf install make gcc python3 python3-pip
+pip3 install matplotlib numpy pandas seaborn
+
+# Mac OSX执行以下命令安装依赖
+brew install make gcc python3 pipx
+pipx install matplotlib numpy pandas seaborn --include-deps
+
+# 获取代码
+git clone https://github.com/Fix-Point/projOPENVELA-InvariantDivisor
+
+make # 编译测试程序
+
+make test # 绑定核心、提升优先级进行测试，需要sudo权限
+
+make divfigure # 测试并生成性能图表avgdiv.pdf, div_box.pdf和div_violin.pdf
+```
