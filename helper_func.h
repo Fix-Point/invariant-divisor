@@ -59,7 +59,7 @@ static inline void output_to_file(const char *file_name, uint64_t *histogram, ui
         fprintf(f, "histogram \nlatency(cycle)  count\n");
         for (unsigned i = 0; i < histogram_max_nr; i++) {
             if  (histogram[i] != 0) {
-                fprintf(f, "%03u | %lu\n", i, histogram[i]);
+                fprintf(f, "%03u | %llu\n", i, (unsigned long long)histogram[i]);
             }
         }
         fclose(f);

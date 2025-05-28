@@ -5,7 +5,7 @@ all:
 	${CC} test_div.c data.c ${CCFLAGS} -o test_div.o
 	${CC} test_gettime.c data.c my_clock_gettime.c ${CCFLAGS} -o test_gettime.o
 
-test32:
+all32:
 	${CC} -m32 test_div.c data.c ${CCFLAGS} -o test_div32.o
 	${CC} -m32 test_gettime.c data.c my_clock_gettime.c ${CCFLAGS} -o test_gettime32.o
 

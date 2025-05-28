@@ -82,6 +82,6 @@ void my_clock_gettime_init(void)
 
     cycle_off = diff_cycle / (2 * 64);
 
-    printf("Synchronized cycle_off = %ld\n", cycle_off);
+    printf("Synchronized cycle_off = %lld\n", (long long)cycle_off);
 }
 
