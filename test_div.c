@@ -141,7 +141,7 @@ static void latency_test(void)
   
     printf("\n---------Latency Test--------\n");
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1; i++) {
         uint32_t divisor32 = invariant_divisor32[i];
         uint64_t divisor64 = invariant_divisor64[i];
         struct libdivide_u64_t libdiv = libdivide_u64_gen(divisor64);
@@ -222,41 +222,11 @@ static void latency_test(void)
         }
     }
 
-    printf("\ndivide histogram \nlatency(cycle)  count\n");
-    for (unsigned i = 0; i < HISTOGRAM_CYCLES; i++) {
-        unsigned long percent = 100 * histogramdivide[i] / TEST_NR;
-        if  (histogramdivide[i] != 0) {
-            printf("%03u | %lu\n", i, histogramdivide[i]);
-        }
-    }
-
-    printf("\nlibdivide histogram \nlatency(cycle)  count\n");
-    for (unsigned i = 0; i < HISTOGRAM_CYCLES; i++) {
-        if  (histogramlibdivide[i] != 0) {
-            printf("%03u | %lu\n", i, histogramlibdivide[i]);
-        }
-    }
-
-    printf("\ninvdiv32d32 histogram \nlatency(cycle)  count\n");
-    for (unsigned i = 0; i < HISTOGRAM_CYCLES; i++) {
-        if  (histogram32d32[i] != 0) {
-            printf("%03u | %lu\n", i, histogram32d32[i]);
-        }
-    }
-
-    printf("\ninvdiv64d32 histogram \nlatency(cycle)  count\n");
-    for (unsigned i = 0; i < HISTOGRAM_CYCLES; i++) {
-        if  (histogram64d32[i] != 0) {
-            printf("%03u | %lu\n", i, histogram64d32[i]);
-        }
-    }
-
-    printf("\ninvdiv64d64 histogram \nlatency(cycle)  count\n");
-    for (unsigned i = 0; i < HISTOGRAM_CYCLES; i++) {
-        if  (histogram64d64[i] != 0) {
-            printf("%03u | %lu\n", i, histogram64d64[i]);
-        }
-    }
+    output_to_file("./log/divide_histogram.log", histogramdivide, HISTOGRAM_CYCLES);
+    output_to_file("./log/libdivide_histogram.log", histogramlibdivide, HISTOGRAM_CYCLES);
+    output_to_file("./log/invdiv32d32_histogram.log", histogram32d32, HISTOGRAM_CYCLES);
+    output_to_file("./log/invdiv64d32_histogram.log", histogram64d32, HISTOGRAM_CYCLES);
+    output_to_file("./log/invdiv64d64_histogram.log", histogram64d64, HISTOGRAM_CYCLES);
 }
 
 int main(int argc, char *argv[])

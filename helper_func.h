@@ -1,10 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdio.h>
 
 /* 获取当前周期计数 (Get current CPU cycle count) */
 
-#ifdef __amd64__
+#if defined(__amd64__) || defined(__i386__)
 static inline uint64_t rdtsc(void)
 {
     uint32_t lo;
@@ -48,3 +49,20 @@ static inline uint64_t get_cycle(void)
 #else
 #   error "不支持的体系结构，请在此处添加体系结构支持 (Unsupported Architecture, Please Add support for specific architecture here)"
 #endif
+
+/* 输出到文件 (Output to files) */
+static inline void output_to_file(const char *file_name, uint64_t *histogram, uint64_t histogram_max_nr)
+{
+    FILE *f = fopen(file_name, "w");
+
+    if (f) {
+        fprintf(f, "histogram \nlatency(cycle)  count\n");
+        for (unsigned i = 0; i < histogram_max_nr; i++) {
+            if  (histogram[i] != 0) {
+                fprintf(f, "%03u | %lu\n", i, histogram[i]);
+            }
+        }
+        fclose(f);
+    }
+    
+}
