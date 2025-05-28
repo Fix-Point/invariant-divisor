@@ -105,6 +105,6 @@ def plot_histograms_from_files(directory):
     plt.legend(file_names, frameon=False)
     plt.savefig("./div_box.pdf")
     plt.savefig("./div_box.png")
-    plt.show()
+    # plt.show()
 
 plot_histograms_from_files(filepath)

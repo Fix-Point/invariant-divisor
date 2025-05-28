@@ -18,8 +18,7 @@ test:
 divfigure:
 	mkdir -p log
 	/usr/bin/time -v ./test_div.o > ./log/divrss.txt
-	sudo taskset -c 1 chrt -f 1 ./test_div.o > ./log/divtime.txt
-	sudo chmod +777 ./log/*.txt
+	./test_div.o > ./log/divtime.txt
 	python3 ./script/avgdiv.py ./log/divtime.txt
 	python3 ./script/latencydiv.py ./log
 

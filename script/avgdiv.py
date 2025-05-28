@@ -41,4 +41,5 @@ plt.legend(loc='upper center', bbox_to_anchor=(0.46, 1.2), frameon=False, labels
 plt.subplots_adjust(left=0.05, right = 0.995, bottom = 0.25, top = 0.88, wspace = 0.20 )
 plt.ylabel('cycle/op')
 plt.savefig("avgdiv.pdf")
-plt.show()
+plt.savefig("avgdiv.png")
+# plt.show()
