@@ -33,7 +33,7 @@ plt.figure(figsize=(9, 5))  # 设置画布大小
 # 绘制条形图
 for i in range(0, len(labels)):
     plt.bar(i, values[i], color=plt.cm.tab10(i), label = labels[i], alpha=0.618, capsize=5)
-    plt.text(i, values[i], f'{values[i]:.4f}', ha='center', va='bottom')
+    plt.text(i, values[i], f'{values[i]:.3f}', ha='center', va='center')
 
 x_pos = np.arange(len(labels))
 plt.xticks(x_pos, labels, rotation=45)

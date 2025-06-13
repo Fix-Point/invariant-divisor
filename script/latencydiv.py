@@ -44,7 +44,7 @@ def plot_histograms_from_files(directory):
         all_histograms.extend(histogram)
         # 提取纯文件名（不包含路径和后缀名）
         file_name = os.path.splitext(os.path.basename(filename))[0]
-        filename = file_name[:-10]
+        file_name = file_name[:-10]
         file_names.append(file_name)
         all_labels.extend([file_name] * len(histogram))
 
@@ -74,9 +74,10 @@ def plot_histograms_from_files(directory):
     plt.xlim(-10, 128)
     plt.subplots_adjust(left=0.15, right = 0.995, bottom = 0.13, top = 0.95, wspace = 0.20 )
     plt.tight_layout()
-    plt.legend(file_names, frameon=False)
+    plt.legend(file_names, frameon=False, loc='upper right')
     plt.savefig("./div_violin.pdf")
     plt.savefig("./div_violin.png")
+    plt.show()
 
     dg = sns.catplot(y = all_labels,  x=all_histograms, hue=all_labels, kind="box", whis=(0, 100), height=5.27, aspect=11.7/5.27, medianprops={"color": "r", "linewidth": 2})
 
@@ -102,9 +103,9 @@ def plot_histograms_from_files(directory):
     plt.tick_params(axis='y', which='both', labelleft=False, labelright=True)
     plt.subplots_adjust(left=0.15, right = 0.995, bottom = 0.13, top = 0.95, wspace = 0.20 )
     plt.tight_layout()
-    plt.legend(file_names, frameon=False)
+    plt.legend(file_names, frameon=False, loc='upper right')
     plt.savefig("./div_box.pdf")
     plt.savefig("./div_box.png")
-    # plt.show()
+    plt.show()
 
 plot_histograms_from_files(filepath)

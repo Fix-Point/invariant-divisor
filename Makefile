@@ -23,7 +23,7 @@ divfigure:
 	python3 ./script/avgdiv.py ./log/divtime.txt
 	python3 ./script/latencydiv.py ./log
 
-divfigure_mac:
+divfigure_nonroot:
 	mkdir -p log
 	/usr/bin/time ./test_div.o > ./log/divrss.txt
 	./test_div.o > ./log/divtime.txt
